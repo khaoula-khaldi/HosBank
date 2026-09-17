@@ -39,6 +39,10 @@ app.use(session({
   }
 }));
 
+// Routes
+const authRoutes = require('./src/routes/auth.routes');
+app.use('/auth', authRoutes);
+
 // Basic route to test the app
 app.get('/', (req, res) => {
   res.send('HosBank Application is running!');
