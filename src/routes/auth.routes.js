@@ -1,9 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const authController = require('../controllers/auth.controller');
+const express = require("express");
 
-// Routes d'inscription (Register)
-router.get('/register', authController.showRegister);
-router.post('/register', authController.processRegister);
+const route = express.Router();
 
-module.exports = router;
+const authController = require("../controllers/auth.controller");
+
+route.get("/register", authController.showRegister);
+
+route.post("/register", authController.processRegister);
+
+module.exports = route;
