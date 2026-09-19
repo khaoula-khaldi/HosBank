@@ -37,6 +37,22 @@ const authService = {
           throw new Error("password est incorrect"); 
         }
         return emailExisting;
+    },
+
+    logout(req) {
+        return new Promise((resolve, reject) => {
+
+            req.session.destroy((err) => {
+
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                resolve();
+            });
+
+        });
     }
 
 };
