@@ -24,6 +24,19 @@ const authController = {
         const newUser = await authService.register(data) ;
         
         res.redirect("/auth/login");
+    },
+
+    async logout(req, res) {
+        try {
+            await authService.logout(req);
+            res.json({
+                message: "Logout réussi"
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: "Erreur lors de la déconnexion"
+            });
+        }
     }
 
 };
