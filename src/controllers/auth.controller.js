@@ -9,21 +9,29 @@ const authController = {
         res.render("auth/login");
     },
 
+    async processRegister (req, res)  {
+        const data=req.body;
+        const newUser = await authService.register(data) ;
+        
+        res.redirect("/auth/login");
+    },
+
     async processLogin(req, res) {
         const data = req.body;
 
         const user = await authService.login(data);
 
         req.session.userId = user.id;
-
-        res.redirect("/dashbord");
-    },
-
-    async processRegister (req, res)  {
-        const data=req.body;
-        const newUser = await authService.register(data) ;
-        
-        res.redirect("/auth/login");
+        if(user.role === "USER"){
+            res.redirect("/dashboard");
+        }
+        if(user.role === "CHARGE_CLIENT"){
+            res.redirect("/advisor/dashbord");
+        }
+        if(user.role === "ADMIN"){
+            res.redirect("/admin/dashbord");
+        }
+               
     },
 
     async logout(req, res) {

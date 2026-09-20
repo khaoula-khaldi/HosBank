@@ -1,12 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE DATABASE hosbank ;
 
 DROP DATABASE hosbank;
 
--- user
-DROP table users;
-
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
+SELECT h.*FROM historiques h JOIN comptes_bancaires c   ON h.compte_id = c.id WHERE c.user_id =$1;
+--user
+CREATE TABLE users (id SERIAL PRIMARY KEY,
 
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
@@ -301,4 +300,332 @@ CREATE TABLE demandes (
         FOREIGN KEY (charge_client_id)
         REFERENCES users(id)
         ON DELETE RESTRICT
+);
+
+DROP TABLE IF EXISTS
+    commentaires,
+    demandes,
+    reclamations,
+    virements,
+    interactions,
+    historiques,
+    cartes,
+    comptes_bancaires,
+    users
+CASCADE;
+
+-- =========================================
+-- FAKE USERS
+-- Password pour tous: 123456789
+-- =========================================
+
+INSERT INTO users (nom, prenom, email, password, role)
+VALUES
+(
+    'Khaldi',
+    'Khaoula',
+    'khaoula@test.com',
+    crypt('123456789', gen_salt('bf', 12)),
+    'USER'
+),
+(
+    'Alaoui',
+    'Yassine',
+    'yassine@test.com',
+    crypt('123456789', gen_salt('bf', 12)),
+    'USER'
+),
+(
+    'Bennani',
+    'Sara',
+    'sara@test.com',
+    crypt('123456789', gen_salt('bf', 12)),
+    'USER'
+),
+(
+    'Amrani',
+    'Omar',
+    'omar@test.com',
+    crypt('123456789', gen_salt('bf', 12)),
+    'CHARGE_CLIENT'
+),
+(
+    'Admin',
+    'HosBank',
+    'admin@test.com',
+    crypt('123456789', gen_salt('bf', 12)),
+    'ADMIN'
+);
+
+
+-- =========================================
+-- COMPTES BANCAIRES
+-- =========================================
+
+INSERT INTO comptes_bancaires
+(numero_compte, type, solde, statut, rib, user_id)
+VALUES
+(
+    'CC100001',
+    'COURANT',
+    8500.00,
+    'ACTIF',
+    'RIB100001',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+),
+(
+    'EP100001',
+    'EPARGNE',
+    15000.00,
+    'ACTIF',
+    'RIB100002',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+),
+(
+    'CC100002',
+    'COURANT',
+    4200.00,
+    'ACTIF',
+    'RIB100003',
+    (SELECT id FROM users WHERE email = 'yassine@test.com')
+),
+(
+    'CC100003',
+    'COURANT',
+    7300.00,
+    'ACTIF',
+    'RIB100004',
+    (SELECT id FROM users WHERE email = 'sara@test.com')
+);
+
+
+-- =========================================
+-- CARTES
+-- =========================================
+
+INSERT INTO cartes
+(numero, type, statut, date_expiration, pin_hash, compte_id)
+VALUES
+(
+    'VIRT-100001',
+    'VIRTUELLE',
+    'ACTIVE',
+    '2028-12-31',
+    crypt('1234', gen_salt('bf', 12)),
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100001')
+),
+(
+    'VIRT-100002',
+    'VIRTUELLE',
+    'ACTIVE',
+    '2029-06-30',
+    crypt('1234', gen_salt('bf', 12)),
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100002')
+),
+(
+    'VIRT-100003',
+    'VIRTUELLE',
+    'BLOQUEE',
+    '2028-09-30',
+    crypt('1234', gen_salt('bf', 12)),
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100003')
+);
+
+
+-- =========================================
+-- HISTORIQUES
+-- =========================================
+
+INSERT INTO historiques
+(type, montant, date, compte_id)
+VALUES
+(
+    'DEPOT',
+    5000.00,
+    CURRENT_TIMESTAMP - INTERVAL '5 days',
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100001')
+),
+(
+    'RETRAIT',
+    300.00,
+    CURRENT_TIMESTAMP - INTERVAL '3 days',
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100001')
+),
+(
+    'VIREMENT_ENVOYE',
+    750.00,
+    CURRENT_TIMESTAMP - INTERVAL '2 days',
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100001')
+),
+(
+    'VIREMENT_RECU',
+    1200.00,
+    CURRENT_TIMESTAMP - INTERVAL '1 day',
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100001')
+),
+(
+    'DEPOT',
+    3000.00,
+    CURRENT_TIMESTAMP - INTERVAL '4 days',
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'EP100001')
+),
+(
+    'RETRAIT',
+    500.00,
+    CURRENT_TIMESTAMP - INTERVAL '1 day',
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100002')
+),
+(
+    'VIREMENT_ENVOYE',
+    1000.00,
+    CURRENT_TIMESTAMP - INTERVAL '2 days',
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100003')
+);
+
+
+-- =========================================
+-- INTERACTIONS
+-- =========================================
+
+INSERT INTO interactions
+(type, description, client_id, charge_client_id)
+VALUES
+(
+    'EMAIL',
+    'Demande concernant le compte bancaire',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+),
+(
+    'APPEL',
+    'Question concernant la demande de RIB',
+    (SELECT id FROM users WHERE email = 'yassine@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+),
+(
+    'RENDEZ_VOUS',
+    'Rendez-vous concernant une ouverture de compte épargne',
+    (SELECT id FROM users WHERE email = 'sara@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+);
+
+
+-- =========================================
+-- RECLAMATIONS
+-- =========================================
+
+INSERT INTO reclamations
+(sujet, description, statut, user_id, charge_client_id)
+VALUES
+(
+    'Problème avec un virement',
+    'Le virement apparaît toujours en attente.',
+    'EN_COURS',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+),
+(
+    'Carte virtuelle',
+    'Je rencontre un problème avec ma carte virtuelle.',
+    'RESOLUE',
+    (SELECT id FROM users WHERE email = 'yassine@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+),
+(
+    'Solde incorrect',
+    'Le solde affiché ne semble pas correct.',
+    'EN_ATTENTE',
+    (SELECT id FROM users WHERE email = 'sara@test.com'),
+    NULL
+);
+
+
+-- =========================================
+-- VIREMENTS
+-- =========================================
+
+INSERT INTO virements
+(montant, statut, motif, expediteur_id, destinataire_id)
+VALUES
+(
+    750.00,
+    'EXECUTE',
+    'Paiement facture',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com'),
+    (SELECT id FROM users WHERE email = 'yassine@test.com')
+),
+(
+    1200.00,
+    'EXECUTE',
+    'Remboursement',
+    (SELECT id FROM users WHERE email = 'yassine@test.com'),
+    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+),
+(
+    500.00,
+    'EN_ATTENTE',
+    'Aide familiale',
+    (SELECT id FROM users WHERE email = 'sara@test.com'),
+    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+);
+
+
+-- =========================================
+-- DEMANDES
+-- =========================================
+
+INSERT INTO demandes
+(type, statut, description, user_id, charge_client_id)
+VALUES
+(
+    'OUVERTURE_COMPTE_EPARGNE',
+    'ACCEPTEE',
+    'Demande pour ouvrir un compte épargne.',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+),
+(
+    'DEMANDE_RIB',
+    'EN_COURS',
+    'Demande de génération du RIB.',
+    (SELECT id FROM users WHERE email = 'yassine@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+),
+(
+    'CARTE_VIRTUELLE',
+    'ACCEPTEE',
+    'Demande de création d une carte virtuelle.',
+    (SELECT id FROM users WHERE email = 'sara@test.com'),
+    (SELECT id FROM users WHERE email = 'omar@test.com')
+),
+(
+    'RENOUVELLEMENT_PIN',
+    'EN_ATTENTE',
+    'Demande de renouvellement du PIN.',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com'),
+    NULL
+);
+
+
+-- =========================================
+-- COMMENTAIRES
+-- =========================================
+
+INSERT INTO commentaires
+(content, user_id, demande_id, reclamation_id)
+VALUES
+(
+    'Votre demande est en cours de traitement.',
+    (SELECT id FROM users WHERE email = 'omar@test.com'),
+    (SELECT id FROM demandes
+     WHERE type = 'DEMANDE_RIB'
+     AND user_id = (SELECT id FROM users WHERE email = 'yassine@test.com')),
+    NULL
+),
+(
+    'Nous avons bien pris en charge votre réclamation.',
+    (SELECT id FROM users WHERE email = 'omar@test.com'),
+    NULL,
+    (SELECT id FROM reclamations
+     WHERE sujet = 'Problème avec un virement')
 );
