@@ -5,6 +5,19 @@ const { requireAuth, requireRole } = require("../middlewares/auth.middleware");
 // Protéger toutes les routes de ce routeur
 router.use(requireAuth);
 
+// Redirection intelligente si on accède à /dashboard (ex: quand on est déjà connecté)
+router.get("/", (req, res) => {
+    switch (req.session.user.role) {
+        case "ADMIN":
+            return res.redirect("/dashboard/admin");
+        case "CHARGE_CLIENT":
+            return res.redirect("/dashboard/charge-client");
+        case "USER":
+        default:
+            return res.redirect("/dashboard/client");
+    }
+});
+
 // Dashboard Client (Role: USER)
 router.get("/client", requireRole("USER"), (req, res) => {
     res.render("dashboard/client", { user: req.session.user });
