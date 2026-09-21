@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Client</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded shadow">
+        <h1 class="text-3xl font-bold mb-4">Bienvenue, <%= user.prenom %> <%= user.nom %></h1>
+        <p class="text-gray-600 mb-6">Rôle : <span class="font-bold text-blue-600"><%= user.role %></span></p>
+        
+        <p class="mb-4">Ceci est le tableau de bord réservé aux clients (USER). Vous avez accès à vos comptes, virements et historique.</p>
+
+        <form action="/auth/logout" method="POST">
+            <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Se déconnecter</button>
+        </form>
+    </div>
+</body>
+</html>

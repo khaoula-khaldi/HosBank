@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Administrateur</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded shadow border-t-4 border-red-600">
+        <h1 class="text-3xl font-bold mb-4">Administration Centrale</h1>
+        <p class="text-gray-600 mb-6">Utilisateur : <%= user.prenom %> <%= user.nom %>, Rôle : <span class="font-bold text-red-600"><%= user.role %></span></p>
+        
+        <p class="mb-4">Ceci est l'espace administrateur. Vous avez accès à la gestion des utilisateurs, des rôles et des statistiques globales.</p>
+
+        <form action="/auth/logout" method="POST">
+            <button type="submit" class="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-900">Se déconnecter</button>
+        </form>
+    </div>
+</body>
+</html>
