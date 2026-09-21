@@ -1,4 +1,4 @@
-const pool = require("../config/db").pool;
+const pool = require("../../config/db");
 
 async function findById(userId){
     const res = await pool.query(
@@ -20,9 +20,24 @@ async function getRecentActivities(userId){
     );
     return res.rows;
 }
+async function getVirement(userId){
+    const res= await pool.query(
+        `SELECT
+        v.*,
+        u.email,
+        u.nom,
+        u.prenom
+        FROM virements v
+        JOIN users u
+        ON u.id = v.destinataire_id
+        WHERE v.expediteur_id = $1`,[userId]
+    );
+    return res.rows;
+}
 
 module.exports = {
     findById,
     getBalance,
-    getRecentActivities
+    getRecentActivities,
+    getVirement
 }

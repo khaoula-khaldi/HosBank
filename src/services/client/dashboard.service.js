@@ -6,12 +6,16 @@ async function getDashboard(userId){
     const balance = await dashboardRepository.getBalance(userId);
 
     const activities = await dashboardRepository.getRecentActivities(userId);
+    const virements = await dashboardRepository.getVirement(userId);
 
     return {
         user,
         balance,
-        activities
+        activities,
+        virements
     };
+    
+
 
 }
 

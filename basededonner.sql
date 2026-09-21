@@ -256,7 +256,15 @@ CREATE TABLE virements (
     CONSTRAINT different_users_virement
         CHECK (expediteur_id <> destinataire_id)
 );
-
+SELECT
+    v.*,
+    u.email,
+    u.nom,
+    u.prenom
+FROM virements v
+JOIN users u
+    ON u.id = v.destinataire_id
+WHERE v.expediteur_id = $1;
 
 -- demande
 
