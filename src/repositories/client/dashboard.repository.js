@@ -27,6 +27,7 @@ async function getVirement(userId){
         u.email,
         u.nom,
         u.prenom
+        
         FROM virements v
         JOIN users u
         ON u.id = v.destinataire_id

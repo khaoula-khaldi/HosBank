@@ -23,6 +23,35 @@ CREATE TABLE users (id SERIAL PRIMARY KEY,
 );
 
 
+UPDATE comptes_bancaires
+SET solde = 8500.00
+WHERE id = 5;
+--beneficiaires
+CREATE TABLE beneficiaires (
+    id SERIAL PRIMARY KEY,
+
+    user_id INTEGER NOT NULL,
+    beneficiaire_id INTEGER NOT NULL,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_beneficiaire_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_beneficiaire_user_target
+        FOREIGN KEY (beneficiaire_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT different_users_beneficiaire
+        CHECK (user_id <> beneficiaire_id),
+
+    CONSTRAINT unique_beneficiaire
+        UNIQUE (user_id, beneficiaire_id)
+);
+
 -- compte bancaire
 
 CREATE TABLE comptes_bancaires (
