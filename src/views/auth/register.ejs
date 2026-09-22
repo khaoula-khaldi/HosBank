@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/css/main.css" rel="stylesheet">
 
     <title>HosBank - Inscription</title>
 </head>
@@ -20,6 +20,12 @@
             <h1 class="text-3xl font-serif text-center text-gray-800 mb-8">
                 Sign up
             </h1>
+
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <%= error %>
+                </div>
+            <% } %>
 
             <form action="/auth/register" method="POST" class="space-y-5">
 
