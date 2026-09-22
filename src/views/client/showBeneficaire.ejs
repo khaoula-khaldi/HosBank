@@ -1,0 +1,137 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mes bénéficiaires</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+    <main class="max-w-5xl mx-auto px-6 py-10">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-8">
+
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Mes bénéficiaires
+                </h1>
+
+                <p class="text-gray-500 mt-2">
+                    Gérez les bénéficiaires enregistrés sur votre compte.
+                </p>
+            </div>
+
+            <a
+                href="/client/beneficiaires/add"
+                class="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
+            >
+                + Ajouter un bénéficiaire
+            </a>
+
+        </div>
+
+
+        <!-- Message erreur -->
+        <% if (typeof error !== "undefined" && error) { %>
+
+            <div class="bg-red-100 text-red-700 px-4 py-3 rounded-lg mb-6">
+                <%= error %>
+            </div>
+
+        <% } %>
+
+
+        <!-- Liste des bénéficiaires -->
+
+        <% if (beneficiaires && beneficiaires.length > 0) { %>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <% beneficiaires.forEach(beneficiaire => { %>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+
+                        <div class="flex items-center justify-between mb-5">
+
+                            <div class="flex items-center gap-4">
+
+                                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">
+                                    <%= beneficiaire.prenom.charAt(0).toUpperCase() %>
+                                </div>
+
+                                <div>
+                                    <h2 class="text-lg font-semibold text-gray-800">
+                                        <%= beneficiaire.prenom %>
+                                        <%= beneficiaire.nom %>
+                                    </h2>
+
+                                    <p class="text-sm text-gray-500">
+                                        <%= beneficiaire.email %>
+                                    </p>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="border-t border-gray-100 pt-4">
+
+                            <p class="text-sm text-gray-500 mb-1">
+                                RIB
+                            </p>
+
+                            <p class="font-medium text-gray-800">
+                                <%= beneficiaire.rib %>
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        <% } else { %>
+
+            <!-- Aucun bénéficiaire -->
+
+            <div class="bg-white rounded-xl border border-gray-200 p-10 text-center">
+
+                <div class="text-5xl mb-4">
+                    👤
+                </div>
+
+                <h2 class="text-xl font-semibold text-gray-800">
+                    Aucun bénéficiaire
+                </h2>
+
+                <p class="text-gray-500 mt-2 mb-6">
+                    Vous n'avez pas encore ajouté de bénéficiaire.
+                </p>
+
+                <a
+                    href="/client/beneficiaires/add"
+                    class="inline-block bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
+                >
+                    Ajouter un bénéficiaire
+                </a>
+
+            </div>
+
+        <% } %>
+
+    </main>
+
+</body>
+
+</html>
+```
