@@ -5,50 +5,261 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Ajouter un bénéficiaire</title>
+    <title>HosBank - Ajouter un bénéficiaire</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* HEADER */
+        header {
+            background: #b30000;
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .logout {
+            background: white;
+            color: #b30000;
+            text-decoration: none;
+
+            padding: 10px 18px;
+            border-radius: 6px;
+
+            font-weight: bold;
+        }
+
+        /* MAIN */
+        main {
+            padding: 40px;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        /* PAGE TITLE */
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            color: #b30000;
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            color: #666;
+        }
+
+        /* CARD */
+        .card {
+            background: white;
+            padding: 30px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        /* FORM */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+
+            border: 1px solid #ddd;
+            border-radius: 6px;
+
+            font-size: 15px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #b30000;
+        }
+
+        input::placeholder {
+            color: #999;
+        }
+
+        /* BUTTONS */
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button,
+        .cancel {
+            padding: 12px 20px;
+            border-radius: 6px;
+
+            font-weight: bold;
+            text-decoration: none;
+
+            cursor: pointer;
+        }
+
+        button {
+            background: #b30000;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background: #8f0000;
+        }
+
+        .cancel {
+            background: #eee;
+            color: #333;
+        }
+
+        .cancel:hover {
+            background: #ddd;
+        }
+
+        /* ERROR */
+        .error {
+            background: #ffe5e5;
+            color: #b30000;
+
+            padding: 12px 15px;
+            border-radius: 6px;
+
+            margin-bottom: 20px;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 700px) {
+
+            main {
+                padding: 20px;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            button,
+            .cancel {
+                text-align: center;
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
+    <!-- HEADER -->
+    <header>
+
+        <h1>HosBank</h1>
+
+        <a href="/auth/logout" class="logout">
+            Logout
+        </a>
+
+    </header>
+
+
     <main>
 
-        <h1>Ajouter un bénéficiaire</h1>
+        <!-- PAGE HEADER -->
+        <div class="page-header">
 
-        <p>
-            Ajoutez un bénéficiaire en renseignant son RIB.
-        </p>
+            <h2>
+                Ajouter un bénéficiaire
+            </h2>
 
-        <% if (typeof error !== "undefined" && error) { %>
+            <p>
+                Ajoutez un bénéficiaire en renseignant son RIB.
+            </p>
 
-            <div>
-                <p><%= error %></p>
-            </div>
-
-        <% } %>
-
-
-        <form action="/client/beneficiaires" method="POST">
-
-            <div>
-                <label for="rib">
-                    RIB du bénéficiaire
-                </label>
-
-                <input
-                    type="text"
-                    id="rib"
-                    name="rib"
-                    placeholder="Entrez le RIB"
-                    required
-                >
-            </div>
+        </div>
 
 
-            <button type="submit">
-                Ajouter
-            </button>
+        <!-- FORM CARD -->
+        <div class="card">
 
-        </form>
+            <!-- ERROR -->
+            <% if (typeof error !== "undefined" && error) { %>
+
+                <div class="error">
+                    <%= error %>
+                </div>
+
+            <% } %>
+
+
+            <!-- FORM -->
+            <form action="/client/beneficiaires" method="POST">
+
+                <div class="form-group">
+
+                    <label for="rib">
+                        RIB du bénéficiaire
+                    </label>
+
+                    <input
+                        type="text"
+                        id="rib"
+                        name="rib"
+                        placeholder="Entrez le RIB"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="actions">
+
+                    <button type="submit">
+                        Ajouter
+                    </button>
+
+                    <a
+                        href="/client/beneficiaires"
+                        class="cancel"
+                    >
+                        Annuler
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
 
     </main>
 

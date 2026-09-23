@@ -5,21 +5,15 @@ const beneficiaireController = {
     showAddForm(req, res) {
         res.render("client/beneficiaires");
     },
-
     async addBeneficiaire(req, res) {
-
         try {
-
             const userId = req.session.userId;
             const { rib } = req.body;
 
-            await beneficiaireService.addBeneficiaire(userId,rib);
-
+            await beneficiaireService.addBeneficiaire(userId, rib);
             res.redirect("/client/beneficiaires");
 
         } catch (error) {
-
-            console.error(error);
 
             res.status(400).render("client/beneficiaires", {
                 error: error.message
