@@ -1,9 +1,10 @@
 const express = require("express");
 
-const route = express.Route();
+const route = express.Router();
 
-const virementController = ("../../controllers/client/virement.controller");
+const virementController =require("../../controllers/client/virement.controller");
 
+route.get("/Formvirement",virementController.showVirementForm);
+route.post("/virement",virementController.addVirement);
 
-
-module.exports = route ;
+module.exports = route;
