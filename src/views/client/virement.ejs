@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HosBank - Virement</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background: #b30000;
+            color: white;
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 30px;
+
+            background: white;
+            border-radius: 10px;
+
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        .description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        /* ERROR */
+
+        .error {
+            background: #ffe5e5;
+            color: #b30000;
+
+            border: 1px solid #ffb3b3;
+            padding: 12px 15px;
+
+            border-radius: 6px;
+            margin-bottom: 20px;
+
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #ccc;
+            border-radius: 6px;
+
+            font-size: 15px;
+            background: white;
+        }
+
+        select:focus,
+        input:focus {
+            outline: none;
+            border-color: #b30000;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 13px;
+
+            background: #b30000;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #900000;
+        }
+
+        .cancel {
+            display: block;
+
+            text-align: center;
+
+            margin-top: 15px;
+
+            color: #666;
+
+            text-decoration: none;
+        }
+
+        .no-beneficiaire {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .add-link {
+            display: inline-block;
+
+            margin-top: 15px;
+
+            padding: 10px 15px;
+
+            background: #b30000;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+
+        <h1>HosBank</h1>
+
+        <a href="/auth/logout">
+            Déconnexion
+        </a>
+
+    </header>
+
+
+    <main class="container">
+    <h2>Faire un virement</h2>
+
+    <p class="description">
+        Sélectionnez un bénéficiaire et indiquez le montant.
+    </p>
+
+    <% if (error) { %>
+
+        <div class="error">
+            <%= error %>
+        </div>
+
+    <% } %>
+
+
+        <!-- AUCUN BENEFICIAIRE -->
+
+        <% if (!beneficiaires || beneficiaires.length === 0) { %>
+
+            <div class="no-beneficiaire">
+
+                <p>
+                    Vous n'avez aucun bénéficiaire.
+                </p>
+
+                <a
+                    href="/client/beneficiaires/add"
+                    class="add-link"
+                >
+                    Ajouter un bénéficiaire
+                </a>
+
+            </div>
+
+
+        <% } else { %>
+
+
+            <!-- FORMULAIRE -->
+
+            <form
+                action="/client/virement"
+                method="POST"
+            >
+
+
+                <!-- BENEFICIAIRE -->
+
+                <div class="form-group">
+
+                    <label for="beneficiaireId">
+                        Bénéficiaire
+                    </label>
+
+                    <select
+                        id="beneficiaireId"
+                        name="beneficiaireId"
+                        required
+                    >
+
+                        <option value="">
+                            -- Sélectionner un bénéficiaire --
+                        </option>
+
+
+                        <% beneficiaires.forEach(beneficiaire => { %>
+
+                            <option
+                                value="<%= beneficiaire.beneficiaire_id %>"
+                            >
+                                <%= beneficiaire.rib %>
+                            </option>
+
+                        <% }) %>
+
+                    </select>
+
+                </div>
+
+
+                <!-- MONTANT -->
+
+                <div class="form-group">
+
+                    <label for="montant">
+                        Montant
+                    </label>
+
+                    <input
+                        type="number"
+                        id="montant"
+                        name="montant"
+                        min="0.01"
+                        step="0.01"
+                        placeholder="Ex : 500"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <button type="submit">
+                    Faire le virement
+                </button>
+
+
+                <!-- CANCEL -->
+
+                <a
+                    href="/client/dashboard"
+                    class="cancel"
+                >
+                    Annuler
+                </a>
+
+            </form>
+
+
+        <% } %>
+
+    </main>
+
+</body>
+</html>
