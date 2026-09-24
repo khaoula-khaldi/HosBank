@@ -5,6 +5,7 @@ const beneficiaireRoutes = require("./src/routes/client/beneficiaires.route");
 const authRoute = require("./src/routes/auth.routes");
 const virementRoute = require('./src/routes/client/virement.route');
 const adminRoute = require('./src/routes/admin/admin.routes');
+const chargeClientRoute = require('./src/routes/charge-client/charge-client.routes');
 
 const path = require("path");
 
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/admin", adminRoute);
+app.use("/charge-client", chargeClientRoute);
 app.use("/client", beneficiaireRoutes);
 
 app.use("/auth", authRoute);
