@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HosBank - Virement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* HEADER */
+        header {
+            background: #b30000;
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-link, .logout {
+            background: white;
+            color: #b30000;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 40px;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .card h3 {
+            color: #b30000;
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+        }
+        .alert-error {
+            background: #ffe6e6;
+            color: #b30000;
+            border: 1px solid #ffcccc;
+        }
+        .alert-success {
+            background: #e6ffe6;
+            color: #008000;
+            border: 1px solid #ccffcc;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        form label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        form input, form select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background: #b30000;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #990000;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: 0;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>HosBank</h1>
+        <div class="header-links">
+            <a href="/client/dashboard" class="nav-link">Dashboard</a>
+            <a href="/auth/logout" class="logout">Logout</a>
+        </div>
+    </header>
+
+    <main>
+        <% if (error) { %>
+            <div class="alert alert-error"><%= error %></div>
+        <% } %>
+        <% if (success) { %>
+            <div class="alert alert-success"><%= success %></div>
+        <% } %>
+
+        <div class="card">
+            <h3>Nouveau Virement</h3>
+
+            <% if (beneficiaires && beneficiaires.length > 0) { %>
+                <form action="/client/virement" method="POST">
+                    <label for="beneficiaire_id">Bénéficiaire</label>
+                    <select name="beneficiaire_id" id="beneficiaire_id" required>
+                        <option value="" disabled selected>-- Sélectionnez un bénéficiaire --</option>
+                        <% beneficiaires.forEach(b => { %>
+                            <option value="<%= b.id %>"><%= b.prenom %> <%= b.nom %> (<%= b.rib %>)</option>
+                        <% }) %>
+                    </select>
+
+                    <label for="montant">Montant (DH)</label>
+                    <input type="number" name="montant" id="montant" step="0.01" min="0.01" required>
+
+                    <label for="motif">Motif (Optionnel)</label>
+                    <input type="text" name="motif" id="motif" placeholder="Motif du virement">
+
+                    <button type="submit">Confirmer le virement</button>
+                </form>
+            <% } else { %>
+                <p><strong>Aucun bénéficiaire.</strong> Veuillez ajouter un bénéficiaire avant de pouvoir effectuer un virement.</p>
+            <% } %>
+        </div>
+
+        <div class="card">
+            <h3>Ajouter un Bénéficiaire</h3>
+            <form action="/client/virement/beneficiaire" method="POST">
+                <label for="nom">Nom</label>
+                <input type="text" name="nom" id="nom" required>
+
+                <label for="prenom">Prénom</label>
+                <input type="text" name="prenom" id="prenom" required>
+
+                <label for="rib">RIB</label>
+                <input type="text" name="rib" id="rib" required>
+
+                <button type="submit">Ajouter</button>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>

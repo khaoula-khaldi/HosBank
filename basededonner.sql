@@ -219,7 +219,49 @@ CREATE TABLE commentaires (
 );
 
 
+-- beneficiaires
+-- Address book of payees for a client (users 1-N beneficiaires).
+-- The client's own RIB lives on comptes_bancaires; a beneficiary RIB lives here.
+
+CREATE TABLE beneficiaires (
+    id SERIAL PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    rib VARCHAR(50) NOT NULL,
+    user_id INTEGER NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_beneficiaire_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE RESTRICT,
+    CONSTRAINT unique_beneficiaire_rib_per_user
+        UNIQUE (user_id, rib)
+);
+
+CREATE OR REPLACE FUNCTION check_beneficiaire_not_own_rib()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM comptes_bancaires
+        WHERE user_id = NEW.user_id
+          AND rib = NEW.rib
+    ) THEN
+        RAISE EXCEPTION 'Un bénéficiaire ne peut pas utiliser le RIB d''un compte du même utilisateur';
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_beneficiaire_not_own_rib
+BEFORE INSERT OR UPDATE ON beneficiaires
+FOR EACH ROW
+EXECUTE PROCEDURE check_beneficiaire_not_own_rib();
+
 -- virement
+-- Debits compte_source_id (must belong to expediteur_id) and targets beneficiaire_id
+-- (must belong to the same client). destinataire_id is optional when the RIB maps
+-- to a HosBank user.
 
 CREATE TABLE virements (
     id SERIAL PRIMARY KEY,
@@ -241,7 +283,11 @@ CREATE TABLE virements (
 
     expediteur_id INTEGER NOT NULL,
 
-    destinataire_id INTEGER NOT NULL,
+    destinataire_id INTEGER,
+
+    compte_source_id INTEGER NOT NULL,
+
+    beneficiaire_id INTEGER NOT NULL,
 
     CONSTRAINT fk_virement_expediteur
         FOREIGN KEY (expediteur_id)
@@ -253,9 +299,53 @@ CREATE TABLE virements (
         REFERENCES users(id)
         ON DELETE RESTRICT,
 
+    CONSTRAINT fk_virement_compte_source
+        FOREIGN KEY (compte_source_id)
+        REFERENCES comptes_bancaires(id)
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_virement_beneficiaire
+        FOREIGN KEY (beneficiaire_id)
+        REFERENCES beneficiaires(id)
+        ON DELETE RESTRICT,
+
     CONSTRAINT different_users_virement
-        CHECK (expediteur_id <> destinataire_id)
+        CHECK (destinataire_id IS NULL OR expediteur_id <> destinataire_id)
 );
+
+CREATE INDEX idx_virements_compte_source ON virements(compte_source_id);
+CREATE INDEX idx_virements_beneficiaire ON virements(beneficiaire_id);
+CREATE INDEX idx_virements_expediteur ON virements(expediteur_id);
+
+CREATE OR REPLACE FUNCTION check_virement_ownership()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1
+        FROM comptes_bancaires
+        WHERE id = NEW.compte_source_id
+          AND user_id = NEW.expediteur_id
+    ) THEN
+        RAISE EXCEPTION 'Le compte source doit appartenir à l''expéditeur';
+    END IF;
+
+    IF NOT EXISTS (
+        SELECT 1
+        FROM beneficiaires
+        WHERE id = NEW.beneficiaire_id
+          AND user_id = NEW.expediteur_id
+    ) THEN
+        RAISE EXCEPTION 'Le bénéficiaire doit appartenir à l''expéditeur';
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_virement_ownership
+BEFORE INSERT OR UPDATE ON virements
+FOR EACH ROW
+EXECUTE PROCEDURE check_virement_ownership();
 SELECT
     v.*,
     u.email,
@@ -315,6 +405,7 @@ DROP TABLE IF EXISTS
     demandes,
     reclamations,
     virements,
+    beneficiaires,
     interactions,
     historiques,
     cartes,
@@ -549,32 +640,76 @@ VALUES
 
 
 -- =========================================
+-- BENEFICIAIRES
+-- =========================================
+
+INSERT INTO beneficiaires (nom, prenom, rib, user_id)
+VALUES
+(
+    'Alaoui',
+    'Yassine',
+    'RIB100003',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+),
+(
+    'Bennani',
+    'Sara',
+    'RIB100004',
+    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+),
+(
+    'Khaldi',
+    'Khaoula',
+    'RIB100001',
+    (SELECT id FROM users WHERE email = 'yassine@test.com')
+),
+(
+    'Khaldi',
+    'Khaoula',
+    'RIB100001',
+    (SELECT id FROM users WHERE email = 'sara@test.com')
+);
+
+
+-- =========================================
 -- VIREMENTS
 -- =========================================
 
 INSERT INTO virements
-(montant, statut, motif, expediteur_id, destinataire_id)
+(montant, statut, motif, expediteur_id, destinataire_id, compte_source_id, beneficiaire_id)
 VALUES
 (
     750.00,
     'EXECUTE',
     'Paiement facture',
     (SELECT id FROM users WHERE email = 'khaoula@test.com'),
-    (SELECT id FROM users WHERE email = 'yassine@test.com')
+    (SELECT id FROM users WHERE email = 'yassine@test.com'),
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100001'),
+    (SELECT b.id FROM beneficiaires b
+     JOIN users u ON u.id = b.user_id
+     WHERE u.email = 'khaoula@test.com' AND b.rib = 'RIB100003')
 ),
 (
     1200.00,
     'EXECUTE',
     'Remboursement',
     (SELECT id FROM users WHERE email = 'yassine@test.com'),
-    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+    (SELECT id FROM users WHERE email = 'khaoula@test.com'),
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100002'),
+    (SELECT b.id FROM beneficiaires b
+     JOIN users u ON u.id = b.user_id
+     WHERE u.email = 'yassine@test.com' AND b.rib = 'RIB100001')
 ),
 (
     500.00,
     'EN_ATTENTE',
     'Aide familiale',
     (SELECT id FROM users WHERE email = 'sara@test.com'),
-    (SELECT id FROM users WHERE email = 'khaoula@test.com')
+    (SELECT id FROM users WHERE email = 'khaoula@test.com'),
+    (SELECT id FROM comptes_bancaires WHERE numero_compte = 'CC100003'),
+    (SELECT b.id FROM beneficiaires b
+     JOIN users u ON u.id = b.user_id
+     WHERE u.email = 'sara@test.com' AND b.rib = 'RIB100001')
 );
 
 
