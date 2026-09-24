@@ -10,22 +10,35 @@ const authController = {
     },
 
     async processRegister (req, res)  {
-        const data=req.body;
-        const newUser = await authService.register(data) ;
-        
-        res.redirect("/auth/login");
+        try {
+            const data = req.body;
+            await authService.register(data);
+            res.redirect("/auth/login");
+        } catch (error) {
+            console.error("Register error:", error);
+            res.status(400).render("auth/register", { error: "Erreur lors de l'inscription." });
+        }
     },
 
-  async processLogin(req, res) {
+    async processLogin(req, res) {
+        try {
+            const data = req.body;
+            const user = await authService.login(data);
+        
+            req.session.userId = user.id;
 
-        const data = req.body;
-
-        const user = await authService.login(data);
-    
-        req.session.userId = user.id;
-
-        if (user.role === "USER") {
-            return res.redirect("/client/dashboard");
+            if (user.role === "USER") {
+                return res.redirect("/client/dashboard");
+            } else if (user.role === "ADMIN") {
+                return res.redirect("/admin/dashboard");
+            } else if (user.role === "CHARGE_CLIENT") {
+                return res.redirect("/charge-client/dashboard");
+            } else {
+                return res.redirect("/");
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            res.status(401).render("auth/login", { error: "Identifiants invalides." });
         }
     },
 

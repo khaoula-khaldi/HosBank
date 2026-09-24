@@ -18,6 +18,13 @@ const userRepository = {
     );
 
     return row.rows[0];
+  },
+
+  async findById(id) {
+    const res = await pool.query(
+      "SELECT * FROM users WHERE id=$1", [id]
+    );
+    return res.rows[0];
   }
 
 

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOSBank - Admin Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+        body { background: #f5f5f5; color: #333; }
+        header { background: #b30000; color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 24px; }
+        .logout { background: white; color: #b30000; text-decoration: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; }
+        main { padding: 40px; max-width: 1000px; margin: auto; }
+        .section-title { color: #b30000; margin-bottom: 20px; font-size: 20px; border-bottom: 2px solid #b30000; padding-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+        .card h3 { font-size: 14px; color: #666; margin-bottom: 10px; text-transform: uppercase; }
+        .card .value { font-size: 28px; font-weight: bold; color: #333; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>HOSBank - Admin Dashboard</h1>
+        <a href="/auth/logout" class="logout">Logout</a>
+    </header>
+
+    <main>
+        <h2 class="section-title">Utilisateurs</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Total</h3>
+                <div class="value"><%= stats.users.total %></div>
+            </div>
+            <div class="card">
+                <h3>Actifs</h3>
+                <div class="value"><%= stats.users.active %></div>
+            </div>
+            <div class="card">
+                <h3>Inactifs</h3>
+                <div class="value"><%= stats.users.inactive %></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Répartition par Rôle</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>USER</h3>
+                <div class="value"><%= stats.users.user %></div>
+            </div>
+            <div class="card">
+                <h3>CHARGE_CLIENT</h3>
+                <div class="value"><%= stats.users.charge_client %></div>
+            </div>
+            <div class="card">
+                <h3>ADMIN</h3>
+                <div class="value"><%= stats.users.admin %></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Banque</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>Comptes Bancaires</h3>
+                <div class="value"><%= stats.comptes %></div>
+            </div>
+            <div class="card">
+                <h3>Bénéficiaires</h3>
+                <div class="value"><%= stats.beneficiaires %></div>
+            </div>
+            <div class="card">
+                <h3>Total Virements</h3>
+                <div class="value"><%= stats.virements.total %></div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Statut des Virements</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>EN_ATTENTE</h3>
+                <div class="value"><%= stats.virements.en_attente %></div>
+            </div>
+            <div class="card">
+                <h3>EXECUTE</h3>
+                <div class="value"><%= stats.virements.execute %></div>
+            </div>
+            <div class="card">
+                <h3>REFUSE</h3>
+                <div class="value"><%= stats.virements.refuse %></div>
+            </div>
+            <div class="card">
+                <h3>ANNULE</h3>
+                <div class="value"><%= stats.virements.annule %></div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
