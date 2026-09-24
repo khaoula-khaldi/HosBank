@@ -4,14 +4,21 @@ const dashboardRoutes = require("./src/routes/client/client.routes");
 const beneficiaireRoutes = require("./src/routes/client/beneficiaires.route");
 const authRoute = require("./src/routes/auth.routes");
 const virementRoute = require('./src/routes/client/virement.route');
+const adminRoute = require('./src/routes/admin/admin.routes');
+const chargeClientRoute = require('./src/routes/charge-client/charge-client.routes');
 
 const path = require("path");
 
 const app = express();
 app.use(session({
-    secret: process.env.SESSION_SECRET,
+    secret: process.env.SESSION_SECRET || 'fallback_secret_for_dev',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production'
+    }
 }));
 
 
@@ -20,7 +27,8 @@ app.set("views", path.join(__dirname, "src/views"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
+app.use("/admin", adminRoute);
+app.use("/charge-client", chargeClientRoute);
 app.use("/client", beneficiaireRoutes);
 
 app.use("/auth", authRoute);

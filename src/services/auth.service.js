@@ -5,12 +5,11 @@ const compteRepository = require("../repositories/client/compte.repository");
 const authService = {
 
     async register(data) {
-
         const emailExisting = await userRepository.findByEmail(data.email);
         if(emailExisting){
-          throw new Error("ce email est déja utiliser veiller entre une autre mail ")
+          throw new Error("Cet email est déjà utilisé");
         }
-        const passwordHash = await bcrypt.hash(data.password,12);
+        const passwordHash = await bcrypt.hash(data.password, 12);
 
         const user={
           "nom" : data.nom ,
@@ -28,31 +27,30 @@ const authService = {
     async login(data){
         const emailExisting = await userRepository.findByEmail(data.email);
         if(!emailExisting){
-          throw new Error("ce mail n'a pas éte enregister veiller de faire register");
+          throw new Error("Identifiants invalides");
+        }
+        if(!emailExisting.actif) {
+          throw new Error("Compte inactif");
         }
         const passwordCorrect = await bcrypt.compare(
           data.password,
           emailExisting.password
         );
         if(!passwordCorrect){
-          throw new Error("password est incorrect"); 
+          throw new Error("Identifiants invalides"); 
         }
         return emailExisting;
     },
 
     logout(req) {
         return new Promise((resolve, reject) => {
-
             req.session.destroy((err) => {
-
                 if (err) {
                     reject(err);
                     return;
                 }
-
                 resolve();
             });
-
         });
     }
 
