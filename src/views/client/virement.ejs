@@ -1,300 +1,178 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>HosBank - Virement</title>
 
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        header {
-            background: #b30000;
-            color: white;
-            padding: 20px 40px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 24px;
-        }
-
-        header a {
-            color: white;
-            text-decoration: none;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 30px;
-
-            background: white;
-            border-radius: 10px;
-
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        h2 {
-            margin-bottom: 10px;
-        }
-
-        .description {
-            color: #666;
-            margin-bottom: 25px;
-        }
-
-        /* ERROR */
-
-        .error {
-            background: #ffe5e5;
-            color: #b30000;
-
-            border: 1px solid #ffb3b3;
-            padding: 12px 15px;
-
-            border-radius: 6px;
-            margin-bottom: 20px;
-
-            font-weight: bold;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-
-            font-weight: bold;
-        }
-
-        select,
-        input {
-            width: 100%;
-
-            padding: 12px;
-
-            border: 1px solid #ccc;
-            border-radius: 6px;
-
-            font-size: 15px;
-            background: white;
-        }
-
-        select:focus,
-        input:focus {
-            outline: none;
-            border-color: #b30000;
-        }
-
-        button {
-            width: 100%;
-
-            padding: 13px;
-
-            background: #b30000;
-            color: white;
-
-            border: none;
-            border-radius: 6px;
-
-            cursor: pointer;
-
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        button:hover {
-            background: #900000;
-        }
-
-        .cancel {
-            display: block;
-
-            text-align: center;
-
-            margin-top: 15px;
-
-            color: #666;
-
-            text-decoration: none;
-        }
-
-        .no-beneficiaire {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .add-link {
-            display: inline-block;
-
-            margin-top: 15px;
-
-            padding: 10px 15px;
-
-            background: #b30000;
-            color: white;
-
-            text-decoration: none;
-
-            border-radius: 6px;
-        }
-
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-    <header>
-
-        <h1>HosBank</h1>
-
-        <a href="/auth/logout">
-            Déconnexion
-        </a>
-
-    </header>
+    <!-- Sidebar -->
+    <%- include("../layouts/client-sidebar") %>
 
 
-    <main class="container">
-    <h2>Faire un virement</h2>
+    <!-- Main -->
+    <main class="ml-64 min-h-screen p-8">
 
-    <p class="description">
-        Sélectionnez un bénéficiaire et indiquez le montant.
-    </p>
+        <div class="max-w-2xl mx-auto">
 
-    <% if (error) { %>
+            <!-- Header -->
+            <div class="mb-6">
 
-        <div class="error">
-            <%= error %>
-        </div>
+                <h1 class="text-2xl font-bold text-gray-800">
+                    Faire un virement
+                </h1>
 
-    <% } %>
-
-
-        <!-- AUCUN BENEFICIAIRE -->
-
-        <% if (!beneficiaires || beneficiaires.length === 0) { %>
-
-            <div class="no-beneficiaire">
-
-                <p>
-                    Vous n'avez aucun bénéficiaire.
+                <p class="text-gray-500 mt-2">
+                    Sélectionnez un bénéficiaire et indiquez le montant.
                 </p>
-
-                <a
-                    href="/client/beneficiaires/add"
-                    class="add-link"
-                >
-                    Ajouter un bénéficiaire
-                </a>
 
             </div>
 
 
-        <% } else { %>
+            <!-- Card -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+
+                <!-- Error -->
+                <% if (error) { %>
+
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                        <%= error %>
+                    </div>
+
+                <% } %>
 
 
-            <!-- FORMULAIRE -->
+                <!-- Aucun bénéficiaire -->
+                <% if (!beneficiaires || beneficiaires.length === 0) { %>
 
-            <form
-                action="/client/virement"
-                method="POST"
-            >
+                    <div class="text-center py-8">
+
+                        <div class="text-5xl mb-4">
+                            👥
+                        </div>
+
+                        <p class="text-gray-500">
+                            Vous n'avez aucun bénéficiaire.
+                        </p>
+
+                        <a
+                            href="/client/beneficiaires/add"
+                            class="inline-block mt-5 px-5 py-3 bg-red-700 text-white rounded-lg font-semibold hover:bg-red-800 transition"
+                        >
+                            Ajouter un bénéficiaire
+                        </a>
+
+                    </div>
 
 
-                <!-- BENEFICIAIRE -->
+                <% } else { %>
 
-                <div class="form-group">
 
-                    <label for="beneficiaireId">
-                        Bénéficiaire
-                    </label>
-
-                    <select
-                        id="beneficiaireId"
-                        name="beneficiaireId"
-                        required
+                    <!-- Formulaire -->
+                    <form
+                        action="/client/virement"
+                        method="POST"
                     >
 
-                        <option value="">
-                            -- Sélectionner un bénéficiaire --
-                        </option>
+                        <!-- Bénéficiaire -->
+                        <div class="mb-6">
 
-
-                        <% beneficiaires.forEach(beneficiaire => { %>
-
-                            <option
-                                value="<%= beneficiaire.beneficiaire_id %>"
+                            <label
+                                for="beneficiaireId"
+                                class="block text-sm font-semibold text-gray-700 mb-2"
                             >
-                                <%= beneficiaire.rib %>
-                            </option>
+                                Bénéficiaire
+                            </label>
 
-                        <% }) %>
+                            <select
+                                id="beneficiaireId"
+                                name="beneficiaireId"
+                                required
+                                class="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+                            >
 
-                    </select>
+                                <option value="">
+                                    -- Sélectionner un bénéficiaire --
+                                </option>
 
-                </div>
+                                <% beneficiaires.forEach(beneficiaire => { %>
 
+                                    <option
+                                        value="<%= beneficiaire.beneficiaire_id %>"
+                                    >
+                                        <%= beneficiaire.rib %>
+                                    </option>
 
-                <!-- MONTANT -->
+                                <% }) %>
 
-                <div class="form-group">
+                            </select>
 
-                    <label for="montant">
-                        Montant
-                    </label>
-
-                    <input
-                        type="number"
-                        id="montant"
-                        name="montant"
-                        min="0.01"
-                        step="0.01"
-                        placeholder="Ex : 500"
-                        required
-                    >
-
-                </div>
+                        </div>
 
 
-                <!-- SUBMIT -->
+                        <!-- Montant -->
+                        <div class="mb-6">
 
-                <button type="submit">
-                    Faire le virement
-                </button>
+                            <label
+                                for="montant"
+                                class="block text-sm font-semibold text-gray-700 mb-2"
+                            >
+                                Montant
+                            </label>
+
+                            <div class="relative">
+
+                                <input
+                                    type="number"
+                                    id="montant"
+                                    name="montant"
+                                    min="0.01"
+                                    step="0.01"
+                                    placeholder="Ex : 500"
+                                    required
+                                    class="w-full px-4 py-3 pr-16 border border-gray-300 rounded-lg outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+                                >
+
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
+                                    DH
+                                </span>
+
+                            </div>
+
+                        </div>
 
 
-                <!-- CANCEL -->
-
-                <a
-                    href="/client/dashboard"
-                    class="cancel"
-                >
-                    Annuler
-                </a>
-
-            </form>
+                        <!-- Submit -->
+                        <button
+                            type="submit"
+                            class="w-full py-3 bg-red-700 text-white rounded-lg font-semibold hover:bg-red-800 transition"
+                        >
+                            Faire le virement
+                        </button>
 
 
-        <% } %>
+                        <!-- Cancel -->
+                        <a
+                            href="/client/dashboard"
+                            class="block text-center mt-4 text-gray-500 hover:text-gray-700 transition"
+                        >
+                            Annuler
+                        </a>
+
+                    </form>
+
+                <% } %>
+
+            </div>
+
+        </div>
 
     </main>
 

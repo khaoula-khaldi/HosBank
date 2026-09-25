@@ -1,0 +1,71 @@
+<aside class="fixed left-0 top-0 h-screen w-64 bg-white border-r border-gray-200 flex flex-col p-5">
+
+    <!-- Logo -->
+    <div class="flex items-center gap-3 px-2 mb-10">
+        <div class="w-11 h-11 bg-red-700 text-white rounded-xl flex items-center justify-center text-xl font-bold">
+            H
+        </div>
+
+        <div>
+            <h2 class="text-xl font-bold text-gray-800">
+                HosBank
+            </h2>
+
+            <span class="text-xs text-gray-500">
+                Espace Client
+            </span>
+        </div>
+    </div>
+
+
+    <!-- Navigation -->
+    <nav class="flex flex-col gap-2">
+
+        <!-- Dashboard -->
+        <a href="/client/dashboard"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg bg-red-700 text-white">
+            <span>⌂</span>
+            <span>Dashboard</span>
+        </a>
+
+
+        <!-- Bénéficiaires -->
+        <a href="/client/beneficiaires"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-700">
+            <span>👥</span>
+            <span>Bénéficiaires</span>
+        </a>
+
+
+        <!-- Virement -->
+        <a href="/client/Formvirement"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-700">
+            <span>↗</span>
+            <span>Virement</span>
+        </a>
+
+
+        <!-- Historique -->
+        <a href="/client/historique"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 hover:bg-red-50 hover:text-red-700">
+            <span>↺</span>
+            <span>Historique</span>
+        </a>
+
+    </nav>
+
+
+    <!-- Logout -->
+    <div class="mt-auto border-t border-gray-200 pt-4">
+
+        <a href="/auth/logout"
+           class="flex items-center gap-3 px-4 py-3 rounded-lg text-red-700 hover:bg-red-50">
+
+            <span>↪</span>
+            <span>Déconnexion</span>
+
+        </a>
+
+    </div>
+
+</aside>

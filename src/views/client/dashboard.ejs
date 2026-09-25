@@ -1,304 +1,321 @@
-
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>HosBank - Dashboard</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        /* HEADER */
-        header {
-            background: #b30000;
-            color: white;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 24px;
-        }
-
-        .logout {
-            background: white;
-            color: #b30000;
-            text-decoration: none;
-            padding: 10px 18px;
-            border-radius: 6px;
-            font-weight: bold;
-        }
-
-        /* MAIN */
-        main {
-            padding: 40px;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .welcome {
-            margin-bottom: 30px;
-        }
-
-        .welcome h2 {
-            color: #b30000;
-            margin-bottom: 8px;
-        }
-
-        /* CARDS */
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        .card h3 {
-            color: #b30000;
-            margin-bottom: 20px;
-        }
-
-        /* BALANCE */
-        .balance {
-            font-size: 32px;
-            font-weight: bold;
-            color: #b30000;
-        }
-
-        .account {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        /* ACTIVITIES */
-        .activity {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .activity:last-child {
-            border-bottom: none;
-        }
-
-        .activity-type {
-            font-weight: bold;
-        }
-
-        .activity-date {
-            color: #888;
-            font-size: 13px;
-        }
-
-        .activity-amount {
-            font-weight: bold;
-        }
-
-        /* BENEFICIARIES */
-        .beneficiary {
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .beneficiary:last-child {
-            border-bottom: none;
-        }
-
-        .beneficiary-name {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .beneficiary-email {
-            color: #777;
-            font-size: 14px;
-        }
-
-        /* EMPTY */
-        .empty {
-            color: #888;
-            padding: 10px 0;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 700px) {
-            main {
-                padding: 20px;
-            }
-
-            .cards {
-                grid-template-columns: 1fr;
-            }
-
-            header {
-                padding: 20px;
-            }
-        }
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-    <!-- HEADER -->
-    <header>
-        <h1>HosBank</h1>
-
-        <a href="/auth/logout" class="logout">
-            Logout
-        </a>
-    </header>
+    
+    <%- include("../layouts/client-sidebar") %>
 
 
-    <main>
+    
+    <main class="ml-64 min-h-screen p-8">
 
-        <!-- WELCOME -->
-        <div class="welcome">
-            <h2>
-                Welcome, <%= user.prenom %> <%= user.nom %>
-            </h2>
+        <div class="max-w-7xl mx-auto">
 
-            <p>
-                Here's an overview of your bank account.
-            </p>
-        </div>
+            <!-- HEADER -->
+            <header class="flex items-center justify-between mb-8">
 
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800">
+                        Dashboard
+                    </h1>
 
-        <!-- BALANCE + BENEFICIARIES -->
-        <div class="cards">
-
-            <!-- BALANCE -->
-            <div class="card">
-
-                <h3>My Balance</h3>
-
-                <% if (balance && balance.length > 0) { %>
-
-                    <% balance.forEach(compte => { %>
-
-                        <div class="account">
-
-                            <p>
-                                <strong>
-                                    <%= compte.solde %> DH
-                                </strong>
-                            </p>
-
-                        </div>
-
-                    <% }) %>
-
-                <% } else { %>
-
-                    <p class="empty">
-                        0 DH
+                    <p class="text-gray-500 mt-1">
+                        Overview of your bank account
                     </p>
+                </div>
 
-                <% } %>
+                <div class="text-sm text-gray-500">
+                    HosBank
+                </div>
+
+            </header>
+
+
+            <!-- WELCOME -->
+            <div class="bg-white rounded-xl border border-gray-200 p-6 mb-8">
+
+                <h2 class="text-xl font-semibold text-red-700 mb-2">
+                    Welcome,
+                    <%= user.prenom %>
+                    <%= user.nom %>
+                </h2>
+
+                <p class="text-gray-500">
+                    Here's an overview of your bank account.
+                </p>
 
             </div>
 
 
-            <!-- BENEFICIARIES -->
-            <div class="card">
-
-                <h3>My Beneficiaries</h3>
-
-                <% if (virements && virements.length > 0) { %>
-
-                    <% virements.forEach(virement => { %>
-
-                        <div class="beneficiary">
-
-                            <div class="beneficiary-name">
-                                <%= virement.prenom %>
-                                <%= virement.nom %>
-                            </div>
-
-                            <div class="beneficiary-email">
-                                <%= virement.email %>
-                            </div>
-
-                        </div>
-
-                    <% }) %>
-
-                <% } else { %>
-
-                    <p class="empty">
-                        No beneficiaries yet.
-                    </p>
-
-                <% } %>
-
-            </div>
-
-        </div>
+            <!-- BALANCE + BENEFICIARIES -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
 
 
-        <!-- RECENT ACTIVITIES -->
-        <div class="card">
+                <!-- BALANCE -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
 
-            <h3>Recent Activities</h3>
+                    <div class="flex items-center justify-between mb-6">
 
-            <% if (activities && activities.length > 0) { %>
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            My Balance
+                        </h3>
 
-                <% activities.forEach(activity => { %>
-
-                    <div class="activity">
-
-                        <div>
-                            <div class="activity-type">
-                                <%= activity.type %>
-                            </div>
-
-                            <div class="activity-date">
-                                <%= new Date(activity.date).toLocaleDateString("fr-FR") %>
-                            </div>
-                        </div>
-
-                        <div class="activity-amount">
-                            <%= activity.montant %> DH
+                        <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center text-red-700">
+                            💰
                         </div>
 
                     </div>
 
-                <% }) %>
 
-            <% } else { %>
+                    <% if (balance && balance.length > 0) { %>
 
-                <p class="empty">
-                    No recent activities.
-                </p>
+                        <% balance.forEach(compte => { %>
 
-            <% } %>
+                            <div class="flex items-center justify-between py-4 border-b border-gray-100 last:border-b-0">
+
+                                <div>
+
+                                    <p class="text-sm text-gray-500">
+                                        <%= compte.type %>
+                                    </p>
+
+                                    <p class="text-2xl font-bold text-red-700 mt-1">
+                                        <%= compte.solde %> DH
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        <% }) %>
+
+                    <% } else { %>
+
+                        <div class="py-6">
+
+                            <p class="text-3xl font-bold text-gray-400">
+                                0 DH
+                            </p>
+
+                            <p class="text-sm text-gray-500 mt-2">
+                                No bank account available.
+                            </p>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+
+                <!-- BENEFICIARIES -->
+                <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+
+                    <div class="flex items-center justify-between mb-6">
+
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            My Beneficiaries
+                        </h3>
+
+                        <a href="/client/beneficiaires"
+                           class="text-sm text-red-700 hover:text-red-900 font-medium">
+
+                            View all
+
+                        </a>
+
+                    </div>
+
+
+                    <% if (virements && virements.length > 0) { %>
+
+                        <div class="space-y-4">
+
+                            <% virements.forEach(virement => { %>
+
+                                <div class="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50">
+
+                                    <div class="w-10 h-10 rounded-full bg-red-100 text-red-700 flex items-center justify-center font-semibold">
+
+                                        <%= virement.prenom.charAt(0).toUpperCase() %>
+
+                                    </div>
+
+                                    <div>
+
+                                        <p class="font-medium text-gray-800">
+
+                                            <%= virement.prenom %>
+                                            <%= virement.nom %>
+
+                                        </p>
+
+                                        <p class="text-sm text-gray-500">
+
+                                            <%= virement.email %>
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            <% }) %>
+
+                        </div>
+
+                    <% } else { %>
+
+                        <div class="py-6 text-center">
+
+                            <div class="text-4xl mb-3">
+                                👥
+                            </div>
+
+                            <p class="text-gray-500">
+                                No beneficiaries yet.
+                            </p>
+
+                            <a href="/client/beneficiaires/add"
+                               class="inline-block mt-4 px-4 py-2 bg-red-700 text-white rounded-lg hover:bg-red-800 transition">
+
+                                Add beneficiary
+
+                            </a>
+
+                        </div>
+
+                    <% } %>
+
+                </div>
+
+            </div>
+
+
+            <!-- RECENT ACTIVITIES -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+
+                <div class="flex items-center justify-between mb-6">
+
+                    <div>
+
+                        <h3 class="text-lg font-semibold text-gray-800">
+                            Recent Activities
+                        </h3>
+
+                        <p class="text-sm text-gray-500 mt-1">
+                            Your latest banking operations
+                        </p>
+
+                    </div>
+
+                    <a href="/client/historique"
+                       class="text-sm text-red-700 hover:text-red-900 font-medium">
+
+                        View history
+
+                    </a>
+
+                </div>
+
+
+                <% if (activities && activities.length > 0) { %>
+
+                    <div class="divide-y divide-gray-100">
+
+                        <% activities.forEach(activity => { %>
+
+                            <div class="flex items-center justify-between py-4">
+
+                                <div class="flex items-center gap-4">
+
+                                    <!-- ICON -->
+                                    <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+
+                                        <% if (
+                                            activity.type === "DEPOT" ||
+                                            activity.type === "VIREMENT_RECU"
+                                        ) { %>
+
+                                            <span class="text-green-600">
+                                                ↓
+                                            </span>
+
+                                        <% } else { %>
+
+                                            <span class="text-red-600">
+                                                ↑
+                                            </span>
+
+                                        <% } %>
+
+                                    </div>
+
+
+                                    <!-- INFO -->
+                                    <div>
+
+                                        <p class="font-medium text-gray-800">
+                                            <%= activity.type %>
+                                        </p>
+
+                                        <p class="text-sm text-gray-500">
+
+                                            <%= new Date(activity.date).toLocaleDateString("fr-FR") %>
+
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- AMOUNT -->
+                                <div class="font-semibold text-gray-800">
+
+                                    <%= activity.montant %> DH
+
+                                </div>
+
+                            </div>
+
+                        <% }) %>
+
+                    </div>
+
+                <% } else { %>
+
+                    <div class="py-10 text-center">
+
+                        <div class="text-4xl mb-3">
+                            ↺
+                        </div>
+
+                        <p class="text-gray-500">
+                            No recent activities.
+                        </p>
+
+                    </div>
+
+                <% } %>
+
+            </div>
 
         </div>
 
     </main>
 
 </body>
-</html>
 
+</html>

@@ -11,12 +11,16 @@ const virementService = {
 
     async creerVirement(userId, beneficiaireId, montant) {
 
+        montant = Number(montant);
+
+
         if (montant <= 0) {
             throw new Error(
                 "Il faut envoyer un montant supérieur à 0"
             );
         }
 
+    
         const beneficiaire =
             await virementRepository.findBeneficaire(
                 userId,
@@ -24,7 +28,9 @@ const virementService = {
             );
 
         if (!beneficiaire) {
-            throw new Error("Bénéficiaire invalide");
+            throw new Error(
+                "Bénéficiaire invalide"
+            );
         }
 
         const compte =
@@ -36,10 +42,11 @@ const virementService = {
             );
         }
 
-        if (Number(montant) > Number(compte.solde)) {
-            throw new Error("Solde insuffisant");
+        if (montant > Number(compte.solde)) {
+            throw new Error(
+                "Solde insuffisant"
+            );
         }
-
         return await virementRepository.createVirement(
             userId,
             beneficiaireId,

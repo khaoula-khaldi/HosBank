@@ -7,262 +7,99 @@
 
     <title>HosBank - Ajouter un bénéficiaire</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: #f5f5f5;
-            color: #333;
-        }
-
-        /* HEADER */
-        header {
-            background: #b30000;
-            color: white;
-            padding: 20px 40px;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 24px;
-        }
-
-        .logout {
-            background: white;
-            color: #b30000;
-            text-decoration: none;
-
-            padding: 10px 18px;
-            border-radius: 6px;
-
-            font-weight: bold;
-        }
-
-        /* MAIN */
-        main {
-            padding: 40px;
-            max-width: 700px;
-            margin: auto;
-        }
-
-        /* PAGE TITLE */
-        .page-header {
-            margin-bottom: 25px;
-        }
-
-        .page-header h2 {
-            color: #b30000;
-            margin-bottom: 8px;
-        }
-
-        .page-header p {
-            color: #666;
-        }
-
-        /* CARD */
-        .card {
-            background: white;
-            padding: 30px;
-
-            border-radius: 10px;
-
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-        }
-
-        /* FORM */
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-
-        input {
-            width: 100%;
-            padding: 12px;
-
-            border: 1px solid #ddd;
-            border-radius: 6px;
-
-            font-size: 15px;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: #b30000;
-        }
-
-        input::placeholder {
-            color: #999;
-        }
-
-        /* BUTTONS */
-        .actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 25px;
-        }
-
-        button,
-        .cancel {
-            padding: 12px 20px;
-            border-radius: 6px;
-
-            font-weight: bold;
-            text-decoration: none;
-
-            cursor: pointer;
-        }
-
-        button {
-            background: #b30000;
-            color: white;
-            border: none;
-        }
-
-        button:hover {
-            background: #8f0000;
-        }
-
-        .cancel {
-            background: #eee;
-            color: #333;
-        }
-
-        .cancel:hover {
-            background: #ddd;
-        }
-
-        /* ERROR */
-        .error {
-            background: #ffe5e5;
-            color: #b30000;
-
-            padding: 12px 15px;
-            border-radius: 6px;
-
-            margin-bottom: 20px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 700px) {
-
-            main {
-                padding: 20px;
-            }
-
-            header {
-                padding: 20px;
-            }
-
-            .actions {
-                flex-direction: column;
-            }
-
-            button,
-            .cancel {
-                text-align: center;
-                width: 100%;
-            }
-        }
-    </style>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-gray-50 text-gray-800">
 
-    <!-- HEADER -->
-    <header>
-
-        <h1>HosBank</h1>
-
-        <a href="/auth/logout" class="logout">
-            Logout
-        </a>
-
-    </header>
+    <!-- Sidebar -->
+    <%- include("../layouts/client-sidebar") %>
 
 
-    <main>
+    <!-- Main -->
+    <main class="ml-64 min-h-screen p-8">
 
-        <!-- PAGE HEADER -->
-        <div class="page-header">
+        <div class="max-w-3xl mx-auto">
 
-            <h2>
-                Ajouter un bénéficiaire
-            </h2>
+            <!-- Page Header -->
+            <div class="mb-6">
 
-            <p>
-                Ajoutez un bénéficiaire en renseignant son RIB.
-            </p>
+                <h2 class="text-2xl font-bold text-red-700 mb-2">
+                    Ajouter un bénéficiaire
+                </h2>
 
-        </div>
+                <p class="text-gray-500">
+                    Ajoutez un bénéficiaire en renseignant son RIB.
+                </p>
 
-
-        <!-- FORM CARD -->
-        <div class="card">
-
-            <!-- ERROR -->
-            <% if (typeof error !== "undefined" && error) { %>
-
-                <div class="error">
-                    <%= error %>
-                </div>
-
-            <% } %>
+            </div>
 
 
-            <!-- FORM -->
-            <form action="/client/beneficiaires" method="POST">
+            <!-- Form Card -->
+            <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
 
-                <div class="form-group">
+                <!-- Error -->
+                <% if (typeof error !== "undefined" && error) { %>
 
-                    <label for="rib">
-                        RIB du bénéficiaire
-                    </label>
+                    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+                        <%= error %>
+                    </div>
 
-                    <input
-                        type="text"
-                        id="rib"
-                        name="rib"
-                        placeholder="Entrez le RIB"
-                        required
-                    >
-
-                </div>
+                <% } %>
 
 
-                <div class="actions">
+                <!-- Form -->
+                <form action="/client/beneficiaires" method="POST">
 
-                    <button type="submit">
-                        Ajouter
-                    </button>
+                    <div class="mb-6">
 
-                    <a
-                        href="/client/beneficiaires"
-                        class="cancel"
-                    >
-                        Annuler
-                    </a>
+                        <label
+                            for="rib"
+                            class="block text-sm font-semibold text-gray-700 mb-2"
+                        >
+                            RIB du bénéficiaire
+                        </label>
 
-                </div>
+                        <input
+                            type="text"
+                            id="rib"
+                            name="rib"
+                            placeholder="Entrez le RIB"
+                            required
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg outline-none focus:border-red-700 focus:ring-1 focus:ring-red-700"
+                        >
 
-            </form>
+                    </div>
+
+
+                    <!-- Buttons -->
+                    <div class="flex gap-3 mt-6">
+
+                        <button
+                            type="submit"
+                            class="px-6 py-3 bg-red-700 text-white rounded-lg font-semibold hover:bg-red-800 transition"
+                        >
+                            Ajouter
+                        </button>
+
+
+                        <a
+                            href="/client/beneficiaires"
+                            class="px-6 py-3 bg-gray-100 text-gray-700 rounded-lg font-semibold hover:bg-gray-200 transition"
+                        >
+                            Annuler
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
 
         </div>
 
     </main>
 
 </body>
-
 </html>

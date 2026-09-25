@@ -2,12 +2,15 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE DATABASE hosbank ;
 
 DROP DATABASE hosbank;
+
+update users set role ='CHARGE_CLIENT' where id=13;
+
 SELECT *
 FROM comptes_bancaires
 WHERE user_id = 6;
 UPDATE comptes_bancaires
 SET solde = 500
-WHERE user_id = 8
+WHERE user_id = 14
 AND type = 'COURANT';
 SELECT h.*FROM historiques h JOIN comptes_bancaires c   ON h.compte_id = c.id WHERE c.user_id =$1;
 --user
