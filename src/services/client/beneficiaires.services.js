@@ -8,18 +8,18 @@ const beneficiaireService = {
 
     async addBeneficiaire(userId, rib) {
 
-        // 1. Chercher le propriétaire du RIB
+        
         const beneficiaire = await beneficiaireRepository.findUserByRib(rib);
 
-        // 2. Vérifier que le RIB existe
+       
         if (!beneficiaire) {
             throw new Error("Le RIB n'existe pas");
         }
 
-        // user_id trouvé grâce au RIB
+       
         const beneficiaireId = beneficiaire.user_id;
 
-        // 3. Vérifier que l'utilisateur ne s'ajoute pas lui-même
+   
         if (userId === Number(beneficiaireId)) {
             throw new Error("Vous ne pouvez pas vous ajouter vous-même");
         }
