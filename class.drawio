@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="WOjHMaimbOhOOuRYGLTW" name="Page-1">
-        <mxGraphModel dx="2019" dy="1734" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2834" dy="2062" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -331,6 +331,34 @@
                 </mxCell>
                 <mxCell id="98" value="0..*" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
                     <mxGeometry x="90" y="348" width="40" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;endArrow=none;endFill=0;labelBackgroundColor=none;strokeColor=#60E696;fontColor=default;sketch=1;curveFitting=1;jiggle=2;entryX=0.994;entryY=0.032;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="9" target="9">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="155" y="15"/>
+                            <mxPoint x="110" y="15"/>
+                            <mxPoint x="110" y="-180"/>
+                            <mxPoint x="255" y="-180"/>
+                            <mxPoint x="255" y="-10"/>
+                            <mxPoint x="199" y="-10"/>
+                        </Array>
+                        <mxPoint x="210" y="15" as="sourcePoint"/>
+                        <mxPoint x="255" y="-60" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="104" value="0..*" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=none;fontColor=#095C86;rounded=1;sketch=1;curveFitting=1;jiggle=2;" connectable="0" vertex="1" parent="103">
+                    <mxGeometry x="-0.951" y="3" relative="1" as="geometry">
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="105" value="Demande" style="swimlane;fontStyle=1;align=center;verticalAlign=middle;childLayout=stackLayout;horizontal=1;startSize=29;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=0;marginBottom=0;html=1;whiteSpace=wrap;labelBackgroundColor=none;fillColor=#F694C1;strokeColor=#AF45ED;fontColor=#095C86;rounded=1;sketch=1;curveFitting=1;jiggle=2;" vertex="1" parent="1">
+                    <mxGeometry x="290" y="-330" width="140" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="- id : int&lt;br/&gt;- type : TypeDemande&lt;br/&gt;- statut : StatutDemande&lt;br/&gt;- dateCreation : Date&lt;br/&gt;- dateTraitement : Date&lt;br/&gt;- description : string&lt;br/&gt;- userId : int&lt;br/&gt;- chargeClientId : int" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;labelBackgroundColor=none;fontColor=#095C86;rounded=1;sketch=1;curveFitting=1;jiggle=2;" vertex="1" parent="105">
+                    <mxGeometry y="29" width="140" height="151" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="+ creer()&amp;nbsp;&lt;div&gt;+ traiter()&amp;nbsp;&lt;div&gt;+ annuler() &lt;/div&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;labelBackgroundColor=none;fontColor=#095C86;rounded=1;sketch=1;curveFitting=1;jiggle=2;" vertex="1" parent="105">
+                    <mxGeometry y="180" width="140" height="60" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
