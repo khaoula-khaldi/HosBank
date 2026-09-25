@@ -7,11 +7,23 @@ async function findById(userId){
     return res.rows[0];
 }
 
-async function getBalance(userId){
-    const res = await pool.query(
-        "SELECT solde FROM comptes_bancaires WHERE user_id = $1" , [userId]
+async function getAccounts(userId) {
+    const result = await pool.query(
+        'SELECT id, type, statut, solde FROM comptes_bancaires WHERE user_id = $1 ORDER BY id',
+        [userId]
     );
-    return res.rows;
+    return result.rows;
+}
+
+async function getAccountRequests(userId) {
+    const result = await pool.query(
+        `SELECT id, type, statut, date_creation
+         FROM demandes
+         WHERE user_id = $1 AND type = 'OUVERTURE_COMPTE_EPARGNE'
+         ORDER BY date_creation DESC, id DESC`,
+        [userId]
+    );
+    return result.rows;
 }
 
 async function getRecentActivities(userId){
@@ -38,7 +50,8 @@ async function getVirement(userId){
 
 module.exports = {
     findById,
-    getBalance,
+    getAccounts,
+    getAccountRequests,
     getRecentActivities,
     getVirement
 }
