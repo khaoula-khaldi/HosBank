@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const userRepository = require("../repositories/user.repository");
-const compteRepository = require("../repositories/client/compte.repository");
 
 const authService = {
 
@@ -19,9 +18,7 @@ const authService = {
           "role":"USER"
         }
 
-        const newUser = await userRepository.create(user);
-        await compteRepository.create(newUser.id);
-        return newUser;
+        return userRepository.create(user);
     },
 
     async login(data){
