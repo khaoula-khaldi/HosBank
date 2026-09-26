@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>HosBank - Mon Profil</title>
+
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+
+
+<!-- SIDEBAR -->
+<%- include("../layouts/client-sidebar") %>
+
+
+<!-- MAIN -->
+<main class="ml-64 min-h-screen p-8">
+
+    <div class="max-w-7xl mx-auto">
+
+        <!-- HEADER -->
+        <header class="flex items-center justify-between mb-8">
+
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">
+                    Mon Profil
+                </h1>
+
+                <p class="text-gray-500 mt-1">
+                    Consultez vos informations personnelles
+                </p>
+            </div>
+
+            <div class="text-sm text-gray-500">
+                HosBank
+            </div>
+
+        </header>
+
+
+        <!-- PROFILE CARD -->
+        <div class="bg-white rounded-xl border border-gray-200 shadow-sm p-8">
+
+            <!-- PROFILE HEADER -->
+            <div class="flex items-center gap-5 pb-6 border-b border-gray-200">
+
+                <!-- AVATAR -->
+                <div
+                    class="w-20 h-20 rounded-full bg-red-100 text-red-700 flex items-center justify-center text-2xl font-bold">
+
+                    <%= user.prenom.charAt(0).toUpperCase() %>
+
+                </div>
+
+
+                <div>
+
+                    <h2 class="text-2xl font-semibold text-gray-800">
+
+                        <%= user.prenom %>
+                        <%= user.nom %>
+
+                    </h2>
+
+                    <p class="text-gray-500 mt-1">
+                        Client HosBank
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- PERSONAL INFORMATION -->
+            <div class="mt-8">
+
+                <h3 class="text-lg font-semibold text-gray-800 mb-6">
+                    Informations personnelles
+                </h3>
+
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+                    <!-- NOM -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+
+                        <p class="text-sm text-gray-500 mb-1">
+                            Nom
+                        </p>
+
+                        <p class="font-medium text-gray-800">
+                            <%= user.nom %>
+                        </p>
+
+                    </div>
+
+
+                    <!-- PRENOM -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+
+                        <p class="text-sm text-gray-500 mb-1">
+                            Prénom
+                        </p>
+
+                        <p class="font-medium text-gray-800">
+                            <%= user.prenom %>
+                        </p>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+
+                        <p class="text-sm text-gray-500 mb-1">
+                            Adresse email
+                        </p>
+
+                        <p class="font-medium text-gray-800">
+                            <%= user.email %>
+                        </p>
+
+                    </div>
+
+
+                    <!-- ROLE -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+
+                        <p class="text-sm text-gray-500 mb-1">
+                            Rôle
+                        </p>
+
+                        <p class="font-medium text-gray-800">
+                            <%= user.role %>
+                        </p>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+
+                        <p class="text-sm text-gray-500 mb-1">
+                            Statut du compte
+                        </p>
+
+                        <% if (user.actif) { %>
+
+                            <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
+
+                                Actif
+
+                            </span>
+
+                        <% } else { %>
+
+                            <span
+                                class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-700">
+
+                                Inactif
+
+                            </span>
+
+                        <% } %>
+
+                    </div>
+
+
+                    <!-- DATE CREATION -->
+                    <div class="border border-gray-200 rounded-lg p-4">
+
+                        <p class="text-sm text-gray-500 mb-1">
+                            Client depuis
+                        </p>
+
+                        <p class="font-medium text-gray-800">
+
+                            <%= new Date(user.created_at).toLocaleDateString("fr-FR") %>
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+            <div class="mt-8 pt-6 border-t border-gray-200 flex justify-end gap-3">
+
+                <a
+                    href="/client/dashboard"
+                    class="px-5 py-2.5 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition">
+
+                    Retour
+
+                </a>
+
+               
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

@@ -9,6 +9,8 @@ const virementRoute = require("./src/routes/client/virement.route");
 const adminRoute = require("./src/routes/admin/admin.routes");
 const chargeClientRoute = require("./src/routes/charge-client/charge-client.routes");
 const reclamationRoutes = require("./src/routes/client/reclamation.route");
+const profileRoutes = require("./src/routes/client/profile.route");
+
 
 const app = express();
 
@@ -22,6 +24,7 @@ app.use(session({
         secure: process.env.NODE_ENV === "production"
     }
 }));
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
@@ -40,6 +43,8 @@ app.use("/client", virementRoute);
 app.use("/client", reclamationRoutes);
 
 app.use("/auth", authRoute);
+
+app.use("/client", profileRoutes);
 
 const server = app.listen(3000, () => {
     console.log("Server is running on port 3000");
