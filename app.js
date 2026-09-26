@@ -1,6 +1,7 @@
 const express = require("express");
 const session = require("express-session");
 const path = require("path");
+const welcomeRoute = require("./src/routes/welcome.route");
 
 const dashboardRoutes = require("./src/routes/client/client.routes");
 const beneficiaireRoutes = require("./src/routes/client/beneficiaires.route");
@@ -28,7 +29,8 @@ app.use(session({
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "src/views"));
-
+//welcom
+app.use("/", welcomeRoute);
 // Body parsers
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
