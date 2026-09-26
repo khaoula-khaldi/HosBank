@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HosBank - Historique des opérations</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background: #f5f5f5; color: #333; }
+        header { background: #b30000; color: white; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        header h1 { font-size: 24px; }
+        header a { background: white; color: #b30000; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-weight: bold; }
+        main { width: min(1100px, 100%); margin: auto; padding: 40px; }
+        h2 { color: #b30000; margin-bottom: 8px; }
+        .intro { color: #666; margin-bottom: 24px; }
+        .panel, .empty { background: white; border-radius: 10px; padding: 24px; box-shadow: 0 3px 10px rgba(0,0,0,.08); }
+        .table-wrap { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 680px; }
+        th, td { padding: 14px 12px; text-align: left; border-bottom: 1px solid #eee; }
+        th { color: #666; font-size: 13px; text-transform: uppercase; }
+        .operation { display: inline-block; padding: 6px 10px; border-radius: 20px; font-size: 13px; font-weight: bold; white-space: nowrap; }
+        .depot { color: #216e39; background: #e8f5e9; }
+        .retrait, .virement-envoye { color: #9b1c1c; background: #ffe5e5; }
+        .virement-recu { color: #216e39; background: #e8f5e9; }
+        .account { line-height: 1.5; }
+        .account small { color: #777; }
+        .amount { font-weight: bold; white-space: nowrap; }
+        .empty { color: #666; text-align: center; padding: 44px 24px; }
+        .back { display: inline-block; margin-top: 22px; color: #b30000; font-weight: bold; text-decoration: none; }
+        @media (max-width: 700px) { header { padding: 18px 20px; } main { padding: 24px 16px; } .panel { padding: 12px; } }
+    </style>
+</head>
+<body>
+    <% const operationLabels = { DEPOT: 'Dépôt', RETRAIT: 'Retrait', VIREMENT_ENVOYE: 'Virement envoyé', VIREMENT_RECU: 'Virement reçu' }; %>
+    <% const operationClasses = { DEPOT: 'depot', RETRAIT: 'retrait', VIREMENT_ENVOYE: 'virement-envoye', VIREMENT_RECU: 'virement-recu' }; %>
+    <header>
+        <h1>HosBank</h1>
+        <a href="/auth/logout">Déconnexion</a>
+    </header>
+    <main>
+        <h2>Historique des opérations</h2>
+        <p class="intro">Consultez les opérations enregistrées sur vos comptes bancaires.</p>
+
+        <% if (operations.length === 0) { %>
+            <section class="empty" aria-live="polite">
+                <p>Aucune opération pour le moment.</p>
+            </section>
+        <% } else { %>
+            <section class="panel">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Opération</th><th>Date</th><th>Compte</th><th>Montant</th></tr>
+                        </thead>
+                        <tbody>
+                            <% operations.forEach(operation => { %>
+                                <tr>
+                                    <td><span class="operation <%= operationClasses[operation.type] || '' %>"><%= operationLabels[operation.type] || operation.type %></span></td>
+                                    <td><%= new Date(operation.date).toLocaleString('fr-FR') %></td>
+                                    <td class="account"><%= operation.compte_type %> · <%= operation.numero_compte %><br><small>RIB : <%= operation.rib %></small></td>
+                                    <td class="amount"><%= Number(operation.montant).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> DH</td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        <% } %>
+
+        <a class="back" href="/client/dashboard">Retour au tableau de bord</a>
+    </main>
+</body>
+</html>
